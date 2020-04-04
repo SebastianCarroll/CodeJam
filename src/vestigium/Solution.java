@@ -2,6 +2,7 @@ package vestigium;
 
 import java.util.*;
 import java.io.*;
+
 public class Solution {
     public static void main(String[] args) {
         Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
@@ -13,8 +14,8 @@ public class Solution {
             // build matrix
             int[][] matrix = new int[n][n];
 
-            for (int x = 0; x < n; x ++) {
-                for (int y = 0; y < n; y ++) {
+            for (int x = 0; x < n; x++) {
+                for (int y = 0; y < n; y++) {
                     matrix[x][y] = in.nextInt();
                 }
             }
@@ -30,14 +31,14 @@ public class Solution {
 
             // find r - rows that have repeated elements
             int r = 0;
-            for (int x = 0; x < n; x ++) {
+            for (int x = 0; x < n; x++) {
                 int[] row = matrix[x];
                 // default value of 0 here
                 int[] dupes = new int[n];
-                for (int y = 0; y < n; y ++) {
-                    int check = row[y]-1;
+                for (int y = 0; y < n; y++) {
+                    int check = row[y] - 1;
 
-                    if(dupes[check] == 1) {
+                    if (dupes[check] == 1) {
                         // if the array at this index is 1
                         // we have seen this number and so this row contains dups
                         // add to count and short circuit
@@ -51,16 +52,35 @@ public class Solution {
             }
 
             // find c - cols with repeated elems
+            int c = 0;
+            int[][] dupes = new int[n][n];
+            for (int y = 0; y < n; y++) {
+                for (int x = 0; x < n; x++) {
+                    int check = matrix[x][y] -1;
+
+                    if (dupes[y][check] == 1) {
+                        // if the array at this index is 1
+                        // we have seen this number and so this col contains dups
+                        // add to count and short circuit
+                        c++;
+                        break;
+                    } else {
+                        // number hasn't been seen, so mark as seen and continue
+                        dupes[y][check]++;
+                    }
+                }
+            }
 
             System.out.println("Case #" + i + ": " +
-                    Integer.toString(k)  + " " +
-                    Integer.toString(r)
+                    Integer.toString(k) + " " +
+                    Integer.toString(r) + " " +
+                    Integer.toString(c)
             );
         }
     }
 
     private static void printM(int[][] m) {
-        for (int i=0; i<m.length; i++) {
+        for (int i = 0; i < m.length; i++) {
             int[] row = m[i];
             System.out.println(Arrays.toString(row));
         }
