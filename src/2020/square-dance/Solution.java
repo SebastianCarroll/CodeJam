@@ -53,6 +53,27 @@ public class Solution {
     }
 
     int eliminate_dancers(int[][] dfloor) {
+        int elimiatedCound = 0;
+        for (int r = 0; r < dfloor.length; r++) {
+            int[] row = dfloor[r];
+            for (int c = 0; c < row.length; c++) {
+                int curSkill = dfloor[r][c];
+                if(curSkill > 0) {
+                    // we have a dancer
+                    int compassAve = calculateCompassAveSkill(dfloor, r, c);
+                    if(compassAve > curSkill) {
+                        // Eliminated - how to do without skewing other dancer scores? 
+                        dfloor[r][c] = -1;
+                        elimiatedCound++;
+                    }
+                }
+            }
+        }
+        return elimiatedCound;
+    }
+
+    int calculateCompassAveSkill(int[][] dfloor, int r, int c) {
+
         return 0;
     }
 
