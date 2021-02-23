@@ -60,7 +60,7 @@ public class Solution {
                 int curSkill = dfloor[r][c];
                 if(curSkill > 0) {
                     // we have a dancer
-                    int compassAve = calculateCompassAveSkill(dfloor, r, c);
+                    double compassAve = calculateCompassAveSkill(dfloor, r, c);
                     if(compassAve > curSkill) {
                         // Eliminated - how to do without skewing other dancer scores? 
                         dfloor[r][c] = -1;
@@ -72,9 +72,10 @@ public class Solution {
         return elimiatedCound;
     }
 
-    int calculateCompassAveSkill(int[][] dfloor, int r, int c) {
+    double calculateCompassAveSkill(int[][] dfloor, int r, int c) {
         // start at r,c
-        int skill_sum = 0;
+        double skill_sum = 0;
+        double n_count = 0;
         
         // Move up until hit neighbour or off board
         int r_u =r;
@@ -83,6 +84,7 @@ public class Solution {
             int n_skill = dfloor[r_u][c];
             if(n_skill > -1) {
                 skill_sum += n_skill;
+                n_count++;
                 break; // Don't look for more neighbours
             }
         }
@@ -91,6 +93,7 @@ public class Solution {
             int n_skill = dfloor[r_d][c];
             if(n_skill > -1) {
                 skill_sum += n_skill;
+                n_count++;
                 break; // Don't look for more neighbours
             }
         }
@@ -101,6 +104,7 @@ public class Solution {
             int n_skill = dfloor[r][c_l];
             if(n_skill > -1) {
                 skill_sum += n_skill;
+                n_count++;
                 break; // Don't look for more neighbours
             }
         }
@@ -110,11 +114,13 @@ public class Solution {
             int n_skill = dfloor[r][c_r];
             if(n_skill > -1) {
                 skill_sum += n_skill;
+                n_count++;
                 break; // Don't look for more neighbours
             }
         }
 
-        return skill_sum;
+        // TODO: needs to be a float? Or can i compare to 4x the skill 
+        return n_count == 0 ? skill_sum : skill_sum/n_count;
     }
 
     int sum_skill(int[][] dfloor) {
