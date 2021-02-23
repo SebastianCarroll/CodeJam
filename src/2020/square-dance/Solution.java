@@ -48,7 +48,7 @@ public class Solution {
                 }
             }
 
-            out.println(competition_interest);
+            out.println(String.format("Case #%d: %s", t+1, competition_interest));
         }
     }
 
@@ -73,8 +73,48 @@ public class Solution {
     }
 
     int calculateCompassAveSkill(int[][] dfloor, int r, int c) {
+        // start at r,c
+        int skill_sum = 0;
+        
+        // Move up until hit neighbour or off board
+        int r_u =r;
+        while(r_u > 0) {
+            r_u--;
+            int n_skill = dfloor[r_u][c];
+            if(n_skill > -1) {
+                skill_sum += n_skill;
+                break; // Don't look for more neighbours
+            }
+        }
+        // move down until hit nethbour or ..
+        for(int r_d = r+1; r_d < dfloor.length; r_d++) {
+            int n_skill = dfloor[r_d][c];
+            if(n_skill > -1) {
+                skill_sum += n_skill;
+                break; // Don't look for more neighbours
+            }
+        }
 
-        return 0;
+        int col_count = dfloor[r].length;
+        // move left ..
+        for(int c_l = c-1; c_l > 0; c_l--) {
+            int n_skill = dfloor[r][c_l];
+            if(n_skill > -1) {
+                skill_sum += n_skill;
+                break; // Don't look for more neighbours
+            }
+        }
+
+        // move right ...
+        for(int c_r = c+1; c_r < col_count; c_r++) {
+            int n_skill = dfloor[r][c_r];
+            if(n_skill > -1) {
+                skill_sum += n_skill;
+                break; // Don't look for more neighbours
+            }
+        }
+
+        return skill_sum;
     }
 
     int sum_skill(int[][] dfloor) {
