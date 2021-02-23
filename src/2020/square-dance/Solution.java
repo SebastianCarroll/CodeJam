@@ -62,7 +62,8 @@ public class Solution {
                     // we have a dancer
                     double compassAve = calculateCompassAveSkill(dfloor, r, c);
                     if(compassAve > curSkill) {
-                        // Eliminated - how to do without skewing other dancer scores? 
+                        // TODO: THis will skew the score and eliminate dancers before
+                        // they can be considered in other dancers' scores
                         dfloor[r][c] = -1;
                         elimiatedCound++;
                     }
@@ -72,6 +73,10 @@ public class Solution {
         return elimiatedCound;
     }
 
+    // TODO: this algorithm will slow down significanlty with large boards when
+    // lots of dancers have been eliminated because there will be a vast number of 
+    // empty cells between neighbours but we are checking each empty cell possibly 4 times 
+    // each round
     double calculateCompassAveSkill(int[][] dfloor, int r, int c) {
         // start at r,c
         double skill_sum = 0;
