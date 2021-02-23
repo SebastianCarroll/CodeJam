@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.PrintStream;
 
@@ -29,9 +31,7 @@ public class Solution {
             for (int r = 0; r < row_count; r++) {
                 for (int c = 0; c < col_count; c++) {
                     dfloor[r][c] = sc.nextInt();
-                    // out.print(dfloor[r][c] + ", ");
                 }
-                // out.println("");
             }
 
             // TODO: could just sum initial pass to get first
@@ -52,8 +52,18 @@ public class Solution {
         }
     }
 
+    void print_board(int[][] board) {
+        for(int r=0; r<board.length; r++) {
+            int[] row = board[r];
+            for(int c=0; c<row.length; c++) {
+                out.print(" " + row[c]);
+            }
+            out.println("");
+        }
+    }
+
     int eliminate_dancers(int[][] dfloor) {
-        int elimiatedCound = 0;
+        List<Point> eliminated = new ArrayList<Point>();
         for (int r = 0; r < dfloor.length; r++) {
             int[] row = dfloor[r];
             for (int c = 0; c < row.length; c++) {
@@ -62,15 +72,17 @@ public class Solution {
                     // we have a dancer
                     double compassAve = calculateCompassAveSkill(dfloor, r, c);
                     if(compassAve > curSkill) {
-                        // TODO: THis will skew the score and eliminate dancers before
-                        // they can be considered in other dancers' scores
-                        dfloor[r][c] = -1;
-                        elimiatedCound++;
+                        eliminated.add(new Point(r,c));
                     }
                 }
             }
         }
-        return elimiatedCound;
+
+        for (Point point : eliminated) {
+            dfloor[point.x][point.y] = -1;   
+        }
+
+        return eliminated.size();
     }
 
     // TODO: this algorithm will slow down significanlty with large boards when
@@ -83,9 +95,7 @@ public class Solution {
         double n_count = 0;
         
         // Move up until hit neighbour or off board
-        int r_u =r;
-        while(r_u > 0) {
-            r_u--;
+        for(int r_u = r-1; r_u>=0; r_u--) {
             int n_skill = dfloor[r_u][c];
             if(n_skill > -1) {
                 skill_sum += n_skill;
@@ -105,7 +115,7 @@ public class Solution {
 
         int col_count = dfloor[r].length;
         // move left ..
-        for(int c_l = c-1; c_l > 0; c_l--) {
+        for(int c_l = c-1; c_l >= 0; c_l--) {
             int n_skill = dfloor[r][c_l];
             if(n_skill > -1) {
                 skill_sum += n_skill;
@@ -145,5 +155,17 @@ public class Solution {
 
     public static void main(String[] args) {
         new Solution().run();
+    }
+
+    class Point {
+
+        int x; 
+        int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
     }
 }
