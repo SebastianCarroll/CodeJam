@@ -13,23 +13,20 @@ public class Solution {
     // Scanner sc = new Scanner(System.in);
     PrintStream out = System.out;
 
+    int row_count;
+    int col_count;
+
     void run() {
 
         int t_total = sc.nextInt();
 
-        // TODO: Messy here, needs to be initialised byt guarantee never will be empty
-        // due to input
-        // A better way?
-        int[][] dfloor = new int[0][0];
-
         for (int t = 0; t < t_total; t++) {
-            // Each test here
-            int row_count = sc.nextInt();
-            int col_count = sc.nextInt();
-            // out.println("row: " + row_count
-            // + ", col: " + col_count);
 
-            dfloor = new int[row_count][col_count];
+            row_count = sc.nextInt();
+            col_count = sc.nextInt();
+
+            int[][] dfloor = new int[row_count][col_count];
+
             for (int r = 0; r < row_count; r++) {
                 for (int c = 0; c < col_count; c++) {
                     dfloor[r][c] = sc.nextInt();
@@ -55,9 +52,9 @@ public class Solution {
     }
 
     void print_board(int[][] board) {
-        for(int r=0; r<board.length; r++) {
+        for(int r=0; r<row_count; r++) {
             int[] row = board[r];
-            for(int c=0; c<row.length; c++) {
+            for(int c=0; c<col_count; c++) {
                 out.print(" " + row[c]);
             }
             out.println("");
@@ -66,9 +63,8 @@ public class Solution {
 
     int eliminate_dancers(int[][] dfloor) {
         List<Point> eliminated = new ArrayList<Point>();
-        for (int r = 0; r < dfloor.length; r++) {
-            int[] row = dfloor[r];
-            for (int c = 0; c < row.length; c++) {
+        for (int r = 0; r < row_count; r++) {
+            for (int c = 0; c<col_count; c++) {
                 int curSkill = dfloor[r][c];
                 if(curSkill > 0) {
                     // we have a dancer
@@ -106,7 +102,7 @@ public class Solution {
             }
         }
         // move down until hit nethbour or ..
-        for(int r_d = r+1; r_d < dfloor.length; r_d++) {
+        for(int r_d = r+1; r_d<row_count; r_d++) {
             int n_skill = dfloor[r_d][c];
             if(n_skill > -1) {
                 skill_sum += n_skill;
@@ -115,7 +111,6 @@ public class Solution {
             }
         }
 
-        int col_count = dfloor[r].length;
         // move left ..
         for(int c_l = c-1; c_l >= 0; c_l--) {
             int n_skill = dfloor[r][c_l];
@@ -127,7 +122,7 @@ public class Solution {
         }
 
         // move right ...
-        for(int c_r = c+1; c_r < col_count; c_r++) {
+        for(int c_r = c+1; c_r<col_count; c_r++) {
             int n_skill = dfloor[r][c_r];
             if(n_skill > -1) {
                 skill_sum += n_skill;
@@ -142,10 +137,41 @@ public class Solution {
 
     int sum_skill(int[][] dfloor) {
         // TODO: Overflow?
+        // How do we know if this might be a problem? Som bote calcs in order
+        // 1 <= T <= 100 // not too concerned here
+        // 1 <= Sij <= 10^6
+        // 1 <= RxC <= 100 
+        // Coudl we design a test case where only one dancer is eliminated each round
+        // eg. 
+        /*
+         1 2 3
+         4 5 6 
+         7 8 9
+         skill ave: 
+         3 3 4
+
+         Can already see this wont work. but as a worst case, lets assume we can
+         We could have:
+         Sum_10^6 .. 10^6-100 +
+         Sum_10^6 .. 10^6-99 + 
+         Sum_10^6 .. 10^6-98 +
+         ..
+         Sum_10^6 .. 10^6
+
+         Lets ignore the 100 difference and say its
+         100 dancers for 100 rounds at max skill
+         10^6 * 10^2 *10^2 = 10^10
+
+         Max int in java is: 2147483647
+         = 2^31
+         2^10 about 10^3
+
+         2^31 = 2^(10*3) = (2^10)^3 = (10^3)^3 = 10^9
+         So not for test 1 but def for test two
+        */
         int skill = 0;
-        for (int r = 0; r < dfloor.length; r++) {
-            int[] row = dfloor[r];
-            for (int c = 0; c < row.length; c++) {
+        for (int r=0; r<row_count; r++) {
+            for (int c=0; c<col_count; c++) {
                 int curSkill = dfloor[r][c];
                 if (curSkill > 0) {
                     skill += curSkill;
