@@ -17,6 +17,7 @@ class SolutionTest {
 
     @Test
     void canRunFromStdINStdOut() throws IOException {
+        // Arrange
         // Set Stdin to file input
         String dir = "src/test/java/CodeJam/twentytwenty/squaredance/";
         String testFile = dir + "T-input.txt";
@@ -24,17 +25,22 @@ class SolutionTest {
 
         // Set stdout to output file
         String outActual = dir + "T-output.txt";
+        Path outActualPath = Paths.get(outActual);
         System.setOut(new PrintStream(new File(outActual)));
 
+        // Act
         Solution sol = new Solution();
         sol.run();
 
+        // Assert
+        List<String> actual = Files.readAllLines(outActualPath);
+
         String outExpected = dir + "T-output-expected.txt";
-        List<String> actual = Files.readAllLines(Paths.get(outActual));
         Path outExpectedPath = Paths.get(outExpected);
         List<String> expected = Files.readAllLines(outExpectedPath);
+
         assertIterableEquals(actual, expected, "Expected output files to match");
 
-        Files.delete(outExpectedPath);
+        Files.delete(outActualPath);
     }
 }
